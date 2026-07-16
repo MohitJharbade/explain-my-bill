@@ -1,0 +1,9 @@
+{
+  "Emergency Care": ["emergency", "er visit", "trauma", "ambulance"],
+  "Diagnostic Tests": ["blood test", "x-ray", "mri", "ct scan", "ultrasound", "lab"],
+  "Consultation": ["consultation", "doctor fee", "physician", "checkup"],
+  "Medication": ["medicine", "drug", "tablet", "injection", "pharmacy"],
+  "Room Charges": ["room", "bed", "ward", "icu"],
+  "Surgery": ["surgery", "operation", "procedure"],
+  "Other": []
+}

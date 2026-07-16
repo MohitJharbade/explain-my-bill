@@ -1,8 +1,14 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const multer = require('multer');
 const Tesseract = require('tesseract.js');
+const parseLineItems = require('./services/parseLineItems');
+const categorizeLineItems = require('./services/categorize');
+const flagAnomalies = require('./services/flagAnomalies');
+const explainBill = require('./services/explainService');
+const rateLimit = require('express-rate-limit');
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -10,6 +16,14 @@ const PORT = process.env.PORT || 5001;
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 50, // limit each IP to 50 requests per window
+  message: { error: "Too many requests, please try again later." },
+});
+
+app.use(limiter);
 
 const storage = multer.memoryStorage();
 const upload = multer({
@@ -33,15 +47,36 @@ app.post("/api/upload", upload.single("bill"), async (req, res) => {
 
   try {
     const result = await Tesseract.recognize(req.file.buffer, "eng");
+    const rawText = result.data.text;
+    const parsedItems = parseLineItems(rawText);
+    const categorizedItems = categorizeLineItems(parsedItems);
+    const lineItems = flagAnomalies(categorizedItems);
 
     res.json({
-      message: "OCR completed",
+      message: "OCR + parsing + categorization + flagging completed",
       originalName: req.file.originalname,
-      extractedText: result.data.text,
+      rawText,
+      lineItems,
     });
   } catch (err) {
     console.error("OCR error:", err.message);
     res.status(500).json({ error: "OCR processing failed" });
+  }
+});
+
+app.post("/api/explain", express.json(), async (req, res) => {
+  const { lineItems, question } = req.body;
+
+  if (!lineItems || !Array.isArray(lineItems)) {
+    return res.status(400).json({ error: "lineItems array is required" });
+  }
+
+  try {
+    const explanation = await explainBill(lineItems, question || null);
+    res.json(explanation);
+  } catch (err) {
+    console.error("Explain error:", err.message);
+    res.status(500).json({ error: "Failed to generate explanation" });
   }
 });
 
