@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import jsPDF from "jspdf";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5001";
+
 function App() {
   const [status, setStatus] = useState("Checking backend...");
   const [file, setFile] = useState(null);
@@ -11,7 +13,7 @@ function App() {
   const [explaining, setExplaining] = useState(false);
 
   useEffect(() => {
-    fetch("http://localhost:5001/api/health")
+    fetch(`${API_URL}/api/health`)
       .then((res) => res.json())
       .then((data) => setStatus(data.message))
       .catch(() => setStatus("Could not reach backend"));
@@ -33,7 +35,7 @@ function App() {
 
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:5001/api/upload", {
+      const res = await fetch(`${API_URL}/api/upload`, {
         method: "POST",
         body: formData,
       });
@@ -54,7 +56,7 @@ function App() {
 
     setExplaining(true);
     try {
-      const res = await fetch("http://localhost:5001/api/explain", {
+      const res = await fetch(`${API_URL}/api/explain`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ lineItems, question }),
