@@ -1,0 +1,52 @@
+:root {
+  --paper: #FAF8F3;
+  --ink: #1E293B;
+  --ink-soft: #5B6472;
+  --teal: #2F6E62;
+  --teal-soft: #E4EEEC;
+  --amber: #F2B84B;
+  --amber-soft: #FBF0D9;
+  --coral: #C1503D;
+  --coral-soft: #F7E5E1;
+  --rule: #D8D2C4;
+
+  --font-display: 'Fraunces', serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  line-height: 1.5;
+}
+
+#root {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0;
+}
+
+button {
+  font-family: var(--font-body);
+  cursor: pointer;
+}
+
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 2px;
+}
