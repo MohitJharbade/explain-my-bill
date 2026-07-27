@@ -9,6 +9,7 @@ const categorizeLineItems = require('./services/categorize');
 const flagAnomalies = require('./services/flagAnomalies');
 const explainBill = require('./services/explainService');
 const rateLimit = require('express-rate-limit');
+const preprocessImage = require('./services/imagePreprocess');
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -46,7 +47,8 @@ app.post("/api/upload", upload.single("bill"), async (req, res) => {
   }
 
   try {
-    const result = await Tesseract.recognize(req.file.buffer, "eng");
+    const preprocessedBuffer = await preprocessImage(req.file.buffer);
+    const result = await Tesseract.recognize(preprocessedBuffer, "eng");
     const rawText = result.data.text;
     const parsedItems = parseLineItems(rawText);
     const categorizedItems = categorizeLineItems(parsedItems);
