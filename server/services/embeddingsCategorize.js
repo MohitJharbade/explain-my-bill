@@ -1,5 +1,6 @@
 const { pipeline } = require('@xenova/transformers');
 const categoryKeywords = require('../data/categoryKeywords.json');
+const EMBEDDINGS_ENABLED = process.env.ENABLE_EMBEDDINGS !== "false";
 
 let embedder = null;
 let categoryEmbeddings = null;
@@ -54,6 +55,8 @@ async function getCategoryEmbeddings() {
 
 // Falls back to embeddings-based matching only when keyword matching returns "Other"
 async function categorizeWithEmbeddings(description) {
+  if (!EMBEDDINGS_ENABLED) return "Other";
+
   const model = await getEmbedder();
   const catEmbeddings = await getCategoryEmbeddings();
 
