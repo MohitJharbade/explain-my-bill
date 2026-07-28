@@ -1,9 +1,9 @@
 {
-  "Emergency Care": ["emergency", "er visit", "trauma", "ambulance"],
-  "Diagnostic Tests": ["blood test", "x-ray", "mri", "ct scan", "ultrasound", "lab"],
-  "Consultation": ["consultation", "doctor fee", "physician", "checkup"],
-  "Medication": ["medicine", "drug", "tablet", "injection", "pharmacy"],
-  "Room Charges": ["room", "bed", "ward", "icu"],
+  "Emergency Care": ["emergency", "er visit", "trauma", "ambulance", "emergency room visit"],
+  "Diagnostic Tests": ["blood test", "x-ray", "mri", "ct scan", "ultrasound", "lab", "complete blood count", "erythrocyte sedimentation rate", "c-reactive protein", "ecg", "electrocardiogram", "blood panel", "pathology test"],
+  "Consultation": ["consultation", "doctor fee", "physician", "checkup", "doctor consultation", "specialist visit"],
+  "Medication": ["medicine", "drug", "tablet", "injection", "pharmacy", "iv fluid", "paracetamol", "pain relief injection"],
+  "Room Charges": ["room", "bed", "ward", "icu", "admission charge"],
   "Surgery": ["surgery", "operation", "procedure"],
   "Other": []
 }

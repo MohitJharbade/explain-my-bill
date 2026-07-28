@@ -51,7 +51,7 @@ app.post("/api/upload", upload.single("bill"), async (req, res) => {
     const result = await Tesseract.recognize(preprocessedBuffer, "eng");
     const rawText = result.data.text;
     const parsedItems = parseLineItems(rawText);
-    const categorizedItems = categorizeLineItems(parsedItems);
+    const categorizedItems = await categorizeLineItems(parsedItems);
     const lineItems = flagAnomalies(categorizedItems);
 
     res.json({
