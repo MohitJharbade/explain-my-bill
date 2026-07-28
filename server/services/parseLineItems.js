@@ -15,6 +15,11 @@ function parseLineItems(rawText) {
     "taxable amount",
     "discount",
     "amount in words",
+    "please keep",
+    "medicines once sold",
+    "in case of any queries",
+    "thank you for choosing",
+    "speedy recovery",
   ];
 
   function isExcluded(description) {
@@ -23,8 +28,8 @@ function parseLineItems(rawText) {
   }
 
   function cleanDescription(description) {
-    // Removes stray leading OCR noise like "Es ", "Le] ", single stray letters/brackets at the start
-    return description.replace(/^[A-Za-z]{1,2}[\]\)\s]+(?=[A-Z])/, "").trim();
+    // Removes stray leading OCR noise like "Es ", "Le] ", "0 ", single stray letters/digits/brackets at the start
+    return description.replace(/^[A-Za-z0-9]{1,2}[\]\)\s]+(?=[A-Z])/, "").trim();
   }
 
   const items = [];
