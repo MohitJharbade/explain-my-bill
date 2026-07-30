@@ -46,17 +46,12 @@ app.post("/api/upload", upload.single("bill"), async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: "No file uploaded" });
   }
-
   try {
-    //const preprocessedBuffer = await preprocessImage(req.file.buffer);
-
-    const result = await Tesseract.recognize(preprocessedBuffer, "eng");
-
+    const result = await Tesseract.recognize(req.file.buffer, "eng");
     const rawText = result.data.text;
     const parsedItems = parseLineItems(rawText);
     const categorizedItems = await categorizeLineItems(parsedItems);
     const lineItems = flagAnomalies(categorizedItems);
-
     res.json({
       message: "OCR + parsing + categorization + flagging completed",
       originalName: req.file.originalname,
