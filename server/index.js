@@ -48,7 +48,7 @@ app.post("/api/upload", upload.single("bill"), async (req, res) => {
   }
 
   try {
-    const preprocessedBuffer = await preprocessImage(req.file.buffer);
+    //const preprocessedBuffer = await preprocessImage(req.file.buffer);
 
     const result = await Tesseract.recognize(preprocessedBuffer, "eng");
 
