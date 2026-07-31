@@ -9,7 +9,6 @@ const categorizeLineItems = require('./services/categorize');
 const flagAnomalies = require('./services/flagAnomalies');
 const explainBill = require('./services/explainService');
 const rateLimit = require('express-rate-limit');
-const preprocessImage = require('./services/imagePreprocess');
 
 const app = express();
 app.set('trust proxy', 1);
@@ -47,6 +46,11 @@ app.post("/api/upload", upload.single("bill"), async (req, res) => {
     return res.status(400).json({ error: "No file uploaded" });
   }
   try {
+    // NOTE: Image preprocessing (sharp) is intentionally disabled here.
+    // It works reliably on local machines but caused native-module crashes
+    // on Render's free-tier container environment. Since Render is the
+    // live deployment target, we run OCR on the raw buffer for stability.
+    // Preprocessing remains available locally via services/imagePreprocess.js.
     const result = await Tesseract.recognize(req.file.buffer, "eng");
     const rawText = result.data.text;
     const parsedItems = parseLineItems(rawText);
