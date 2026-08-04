@@ -61,7 +61,7 @@ async function explainWithGroq(prompt) {
 
 async function explainWithHuggingFace(prompt) {
   const response = await hf.chatCompletion({
-    model: "mistralai/Mistral-7B-Instruct-v0.3",
+    model: "Qwen/Qwen2.5-7B-Instruct",
     messages: [{ role: "user", content: prompt }],
     max_tokens: 800,
     temperature: 0.3,
