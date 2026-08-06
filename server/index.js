@@ -65,6 +65,38 @@ app.post("/api/upload", upload.single("bill"), async (req, res) => {
   }
 });
 
+
+app.get("/api/status/:jobId", async (req, res) => {
+  try {
+    const job = await billQueue.getJob(req.params.jobId);
+
+    if (!job) {
+      return res.status(404).json({ error: "Job not found" });
+    }
+
+    const state = await job.getState();
+
+    if (state === "completed") {
+      return res.json({
+        status: "completed",
+        result: job.returnvalue,
+      });
+    }
+
+    if (state === "failed") {
+      return res.json({
+        status: "failed",
+        error: job.failedReason,
+      });
+    }
+
+    return res.json({ status: state }); // e.g. "waiting", "active", "delayed"
+  } catch (err) {
+    console.error("Status check error:", err.message);
+    res.status(500).json({ error: "Failed to check job status" });
+  }
+});
+
 app.post("/api/explain", express.json(), async (req, res) => {
   const { lineItems, question } = req.body;
 
