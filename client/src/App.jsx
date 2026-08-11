@@ -25,6 +25,30 @@ function App() {
     setLineItems([]);
   };
 
+  const pollJobStatus = (jobId) => {
+    const interval = setInterval(async () => {
+      try {
+        const res = await fetch(`${API_URL}/api/status/${jobId}`);
+        const data = await res.json();
+
+        if (data.status === "completed") {
+          clearInterval(interval);
+          setLineItems(data.result.lineItems || []);
+          setLoading(false);
+        } else if (data.status === "failed") {
+          clearInterval(interval);
+          alert("Bill processing failed: " + data.error);
+          setLoading(false);
+        }
+        // if "waiting" or "active", just keep polling
+      } catch (err) {
+        clearInterval(interval);
+        alert("Failed to check job status");
+        setLoading(false);
+      }
+   }, 3000); // poll every 3 seconds
+  };
+
   const handleUpload = async () => {
     if (!file) {
       alert("Please select a file first");
@@ -35,16 +59,22 @@ function App() {
     formData.append("bill", file);
 
     setLoading(true);
+    setLineItems([]);
     try {
       const res = await fetch(`${API_URL}/api/upload`, {
         method: "POST",
         body: formData,
       });
       const data = await res.json();
-      setLineItems(data.lineItems || []);
+
+      if (data.jobId) {
+        pollJobStatus(data.jobId);
+      } else {
+        alert("Failed to queue bill");
+        setLoading(false);
+      }
     } catch (err) {
       alert("Upload failed");
-    } finally {
       setLoading(false);
     }
   };

@@ -25,6 +25,12 @@ const limiter = rateLimit({
   message: { error: "Too many requests, please try again later." },
 });
 
+const statusLimiter = rateLimit({
+  windowMs: 5 * 60 * 1000, // 5 minutes
+  max: 300, // polling every 2s can easily be 100+ requests per job
+  message: { error: "Too many status checks, please slow down." },
+});
+
 app.use(limiter);
 
 const storage = multer.memoryStorage();
@@ -66,7 +72,7 @@ app.post("/api/upload", upload.single("bill"), async (req, res) => {
 });
 
 
-app.get("/api/status/:jobId", async (req, res) => {
+app.get("/api/status/:jobId", statusLimiter, async (req, res) => {
   try {
     const job = await billQueue.getJob(req.params.jobId);
 
