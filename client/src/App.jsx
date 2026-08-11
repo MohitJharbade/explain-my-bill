@@ -49,6 +49,8 @@ function App() {
    }, 3000); // poll every 3 seconds
   };
 
+  
+
   const handleUpload = async () => {
     if (!file) {
       alert("Please select a file first");
